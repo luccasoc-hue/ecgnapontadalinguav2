@@ -74,23 +74,25 @@ section{position:relative}
 .hero h1 .p{color:var(--primary)}
 .hero .sub{font-family:var(--font-display);font-weight:300;font-size:clamp(18px,5vw,26px);color:var(--text-soft);max-width:640px;margin:0 auto 30px;line-height:1.35}
 .hero .sub b{font-weight:700;color:var(--primary)}
-.mockups{display:flex;justify-content:center;align-items:center;gap:0;margin:24px auto 36px;max-width:600px}
-.shot{height:auto;border-radius:14px;box-shadow:0 24px 54px rgba(62,7,114,.32);border:4px solid #fff;background:#fff;display:block}
-.shot.center{width:218px;z-index:3;position:relative;animation:float 4s ease-in-out infinite}
-.shot.left{width:152px;transform:rotate(-8deg) translateX(30px) translateY(16px);z-index:1}
-.shot.right{width:152px;transform:rotate(8deg) translateX(-30px) translateY(16px);z-index:1}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.mockups{position:relative;height:360px;max-width:660px;margin:24px auto 36px}
+.shot{position:absolute;top:50%;left:50%;height:auto;border-radius:14px;box-shadow:0 24px 54px rgba(62,7,114,.32);border:4px solid #fff;background:#fff;display:block}
+.shot.center{width:210px;transform:translate(-50%,-50%);z-index:5;animation:floatC 4s ease-in-out infinite}
+.shot.left{width:150px;transform:translate(calc(-50% - 92px),-50%) rotate(-9deg);z-index:3}
+.shot.far-left{width:134px;transform:translate(calc(-50% - 168px),-50%) rotate(-17deg);z-index:2}
+.shot.right{width:150px;transform:translate(calc(-50% + 92px),-50%) rotate(9deg);z-index:3}
+.shot.far-right{width:134px;transform:translate(calc(-50% + 168px),-50%) rotate(17deg);z-index:2}
+@keyframes floatC{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,calc(-50% - 9px))}}
 
 /* ---------- SHOWCASE CAROUSEL ---------- */
 .showcase{background:#A88BEA;padding:6px 0 74px;text-align:center;overflow:hidden}
 .showcase .sc-title{font-family:var(--font-display);font-weight:700;color:var(--primary);font-size:clamp(28px,7vw,46px);line-height:1;letter-spacing:-1.2px;margin-bottom:8px}
 .showcase .sc-title .soft{color:var(--text-soft)}
 .showcase .sc-intro{font-family:var(--font-display);font-weight:300;font-size:clamp(16px,4.5vw,21px);color:var(--text-soft);max-width:620px;margin:0 auto 34px;line-height:1.4}
-.marquee{position:relative;width:100%;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
-.marquee-track{display:flex;gap:26px;width:max-content;animation:scrollx 34s linear infinite}
-.marquee:hover .marquee-track{animation-play-state:paused}
-.marquee-track img{width:230px;height:auto;flex-shrink:0;border-radius:14px;border:5px solid #fff;background:#fff;box-shadow:0 20px 44px rgba(62,7,114,.24)}
-@keyframes scrollx{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 13px))}}
+.marquee{position:relative;width:100%;overflow-x:auto;overflow-y:hidden;cursor:grab;touch-action:pan-x;-webkit-overflow-scrolling:touch;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.marquee::-webkit-scrollbar{display:none}
+.marquee.grabbing{cursor:grabbing}
+.marquee-track{display:flex;gap:26px;width:max-content}
+.marquee-track img{width:230px;height:auto;flex-shrink:0;border-radius:14px;border:5px solid #fff;background:#fff;box-shadow:0 20px 44px rgba(62,7,114,.24);user-select:none;-webkit-user-drag:none;pointer-events:none}
 @media(max-width:767px){.marquee-track img{width:170px}.marquee-track{gap:18px}}
 
 /* ---------- WAVE ---------- */
@@ -137,7 +139,8 @@ section{position:relative}
 .topic li::before{content:"➜";position:absolute;left:0;color:var(--secondary-light);font-weight:700}
 
 /* ---------- BONUS ---------- */
-.bonus-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;max-width:920px;margin:0 auto}
+.bonus-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:620px;margin:0 auto}
+.bonus-img{width:100%;height:auto;border-radius:18px;box-shadow:0 10px 26px rgba(62,7,114,.12);display:block}
 .bonus{background:var(--surface);border-radius:24px;padding:26px 24px;box-shadow:0 8px 22px rgba(62,7,114,.07);position:relative;border:2px solid rgba(121,12,223,.14)}
 .bonus .tag{position:absolute;top:-13px;left:24px;background:var(--gradient-green);color:#fff;font-family:var(--font-button);font-weight:700;font-size:11px;letter-spacing:.5px;text-transform:uppercase;padding:6px 14px;border-radius:50px}
 .bonus h3{font-family:var(--font-display);font-weight:700;font-size:22px;color:var(--text-soft);margin:12px 0 8px;letter-spacing:-.5px}
@@ -216,10 +219,12 @@ footer a{color:#cbb6e6}
   .plan.featured{order:-1}
   .guarantee{flex-direction:column;text-align:center}
   .sec{padding:52px 0 60px}
-  .mockups{max-width:330px}
+  .mockups{max-width:360px;height:250px}
   .shot.center{width:150px}
-  .shot.left{width:108px;transform:rotate(-8deg) translateX(22px) translateY(12px)}
-  .shot.right{width:108px;transform:rotate(8deg) translateX(-22px) translateY(12px)}
+  .shot.left{width:104px;transform:translate(calc(-50% - 62px),-50%) rotate(-9deg)}
+  .shot.far-left{width:92px;transform:translate(calc(-50% - 116px),-50%) rotate(-17deg)}
+  .shot.right{width:104px;transform:translate(calc(-50% + 62px),-50%) rotate(9deg)}
+  .shot.far-right{width:92px;transform:translate(calc(-50% + 116px),-50%) rotate(17deg)}
   .timer .box{min-width:60px;padding:10px 12px}
   .timer .box b{font-size:28px}
 }
@@ -312,9 +317,11 @@ src="https://www.facebook.com/tr?id=1087085703476927&ev=PageView&noscript=1"
     <h1>ECG na ponta<br>da língua<span class="p">.</span></h1>
     <p class="sub"><b>+80 exercícios visuais</b> para memorizar e laudar um eletrocardiograma com <b>segurança</b>, de forma prática e fácil.</p>
     <div class="mockups">
-      <img src="ecg-pagina-1.webp" class="shot left" width="720" height="1080" alt="Página interna do resumo de ECG" loading="eager" decoding="async">
+      <img src="ecg-pagina-1.webp" class="shot far-left" width="720" height="1080" alt="Página interna do resumo de ECG" loading="eager" decoding="async">
+      <img src="ecg-tracado-1.webp" class="shot left" width="720" height="1018" alt="Página de traçados de ECG comentados" loading="eager" decoding="async">
       <img src="ecg-capa.webp" class="shot center" width="720" height="1080" alt="Capa do e-book ECG na Ponta da Língua" loading="eager" fetchpriority="high" decoding="async">
-      <img src="ecg-pagina-2.webp" class="shot right" width="720" height="1080" alt="Página interna do resumo de ECG" loading="eager" decoding="async">
+      <img src="ecg-tracado-2.webp" class="shot right" width="720" height="960" alt="Página de traçados de ECG comentados" loading="eager" decoding="async">
+      <img src="ecg-pagina-2.webp" class="shot far-right" width="720" height="1080" alt="Página interna do resumo de ECG" loading="eager" decoding="async">
     </div>
     <a href="#plano-completo" class="cta">Comprar agora</a>
   </div>
@@ -333,10 +340,14 @@ src="https://www.facebook.com/tr?id=1087085703476927&ev=PageView&noscript=1"
       <img src="ecg-pagina-2.webp" width="720" height="1080" alt="Página do resumo de ECG — anatomia do coração" loading="lazy" decoding="async">
       <img src="ecg-pagina-3.webp" width="720" height="1080" alt="Página do resumo de ECG — colocação dos eletrodos" loading="lazy" decoding="async">
       <img src="ecg-pagina-4.webp" width="720" height="1080" alt="Página do resumo de ECG — como analisar o traçado" loading="lazy" decoding="async">
+      <img src="ecg-tracado-1.webp" width="720" height="1018" alt="Página de traçados de ECG comentados — ritmos" loading="lazy" decoding="async">
+      <img src="ecg-tracado-2.webp" width="720" height="960" alt="Página de traçados de ECG comentados — isquemia" loading="lazy" decoding="async">
       <img src="ecg-pagina-1.webp" width="720" height="1080" alt="" aria-hidden="true" loading="lazy" decoding="async">
       <img src="ecg-pagina-2.webp" width="720" height="1080" alt="" aria-hidden="true" loading="lazy" decoding="async">
       <img src="ecg-pagina-3.webp" width="720" height="1080" alt="" aria-hidden="true" loading="lazy" decoding="async">
       <img src="ecg-pagina-4.webp" width="720" height="1080" alt="" aria-hidden="true" loading="lazy" decoding="async">
+      <img src="ecg-tracado-1.webp" width="720" height="1018" alt="" aria-hidden="true" loading="lazy" decoding="async">
+      <img src="ecg-tracado-2.webp" width="720" height="960" alt="" aria-hidden="true" loading="lazy" decoding="async">
     </div>
   </div>
 </section>
@@ -407,10 +418,10 @@ src="https://www.facebook.com/tr?id=1087085703476927&ev=PageView&noscript=1"
     <h2 class="sec-title">No plano completo<br><span class="soft">você leva +4 bônus</span></h2>
     <p class="sec-intro">Materiais que normalmente seriam vendidos à parte.</p>
     <div class="bonus-grid">
-      <div class="bonus"><span class="tag">Bônus 1</span><h3>100+ Flashcards de ECG (Anki)</h3><p>Baralho pronto de repetição espaçada pra você fixar cada padrão na memória de longo prazo. É só importar e estudar.</p><p class="val"><s>R$ 47</s> &nbsp;Incluso</p></div>
-      <div class="bonus"><span class="tag">Bônus 2</span><h3>Checklist de Plantão de Bolso</h3><p>O laudo de ECG em 7 passos numa página só. Imprima, dobre no jaleco e nunca mais esqueça uma etapa na correria.</p><p class="val"><s>R$ 37</s> &nbsp;Incluso</p></div>
-      <div class="bonus"><span class="tag">Bônus 3</span><h3>Mapa Mental das Arritmias</h3><p>Um infográfico que organiza todas as arritmias por padrão visual. Bate o olho e chega no diagnóstico mais rápido.</p><p class="val"><s>R$ 39</s> &nbsp;Incluso</p></div>
-      <div class="bonus"><span class="tag">Bônus 4</span><h3>100 Questões Comentadas</h3><p>Banco de questões no estilo prova e residência, com gabarito explicado. Teste se você realmente aprendeu a laudar.</p><p class="val"><s>R$ 57</s> &nbsp;Incluso</p></div>
+      <img src="bonus-1.webp" class="bonus-img" width="720" height="1018" alt="Bônus 1 — 100+ Flashcards de ECG (Anki)" loading="lazy" decoding="async">
+      <img src="bonus-2.webp" class="bonus-img" width="720" height="1018" alt="Bônus 2 — Checklist de Plantão de Bolso" loading="lazy" decoding="async">
+      <img src="bonus-3.webp" class="bonus-img" width="720" height="1018" alt="Bônus 3 — Mapa Mental das Arritmias" loading="lazy" decoding="async">
+      <img src="bonus-4.webp" class="bonus-img" width="720" height="1018" alt="Bônus 4 — 100 Questões Comentadas" loading="lazy" decoding="async">
     </div>
   </div>
 </section>
@@ -502,7 +513,6 @@ src="https://www.facebook.com/tr?id=1087085703476927&ev=PageView&noscript=1"
       <details class="faq"><summary>Como recebo o material depois de pagar?</summary><div class="ans">Na hora. Assim que o pagamento é confirmado (Pix cai em segundos), você recebe o acesso por e-mail e já pode baixar tudo no celular, tablet ou computador.</div></details>
       <details class="faq"><summary>Preciso ter conhecimento prévio de ECG?</summary><div class="ans">Não. O resumo começa do absoluto zero e evolui de forma progressiva. Serve tanto pra quem nunca laudou quanto pra quem quer revisar e ganhar segurança.</div></details>
       <details class="faq"><summary>Qual a diferença entre o plano de R$ 19,90 e o de R$ 29,90?</summary><div class="ans">O plano de R$ 19,90 dá o e-book completo de 80 páginas. O de R$ 29,90 inclui o mesmo e-book + 4 bônus exclusivos (flashcards no Anki, checklist de plantão, mapa mental das arritmias e 100 questões comentadas) — tudo por apenas R$ 10 a mais.</div></details>
-      <div class="faq-cta"><a href="#planos" class="cta">Quero baixar meu resumo</a></div>
       <details class="faq"><summary>O acesso expira?</summary><div class="ans">Nunca. O material é seu para sempre, com direito a baixar quantas vezes quiser. Atualizações futuras você também recebe sem pagar nada a mais.</div></details>
       <details class="faq"><summary>E se eu não gostar?</summary><div class="ans">Você tem 7 dias de garantia incondicional. Se achar que não valeu a pena, devolvemos 100% do valor sem perguntas. Você não corre nenhum risco.</div></details>
       <details class="faq"><summary>Serve pra prova e pra residência?</summary><div class="ans">Sim. O conteúdo cobre o que mais cai em provas da faculdade, internato e residência, com foco em reconhecimento rápido de padrões — exatamente o que as bancas e o plantão exigem.</div></details>
@@ -559,6 +569,44 @@ window.addEventListener('scroll',function(){
     document.getElementById('s').textContent=pad(Math.floor(diff%60000/1000));
   }
   tick();setInterval(tick,1000);
+})();
+
+// Carrossel "Veja por dentro": auto-scroll + arraste (mouse e dedo)
+(function(){
+  var m=document.querySelector('.marquee');
+  var track=m&&m.querySelector('.marquee-track');
+  if(!m||!track)return;
+  var paused=false, resumeT, isDown=false, startX=0, startScroll=0;
+  function pause(){paused=true;clearTimeout(resumeT);}
+  function resumeSoon(){clearTimeout(resumeT);resumeT=setTimeout(function(){paused=false;},1500);}
+  function step(){
+    var half=track.scrollWidth/2;
+    if(!paused&&!isDown){m.scrollLeft+=0.6;}
+    if(half>0){
+      if(m.scrollLeft>=half)m.scrollLeft-=half;
+      else if(m.scrollLeft<=0)m.scrollLeft+=half;
+    }
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+  // arraste com mouse (pointer do tipo mouse); no touch o scroll nativo já funciona
+  m.addEventListener('pointerdown',function(e){
+    if(e.pointerType!=='mouse')return;
+    isDown=true;m.classList.add('grabbing');startX=e.clientX;startScroll=m.scrollLeft;pause();
+    try{m.setPointerCapture(e.pointerId);}catch(_){}
+  });
+  m.addEventListener('pointermove',function(e){
+    if(!isDown)return;e.preventDefault();m.scrollLeft=startScroll-(e.clientX-startX);
+  });
+  function up(){if(!isDown)return;isDown=false;m.classList.remove('grabbing');resumeSoon();}
+  m.addEventListener('pointerup',up);
+  m.addEventListener('pointercancel',up);
+  // dedo / wheel: pausa o automático durante o uso
+  m.addEventListener('touchstart',pause,{passive:true});
+  m.addEventListener('touchend',resumeSoon,{passive:true});
+  m.addEventListener('wheel',function(){pause();resumeSoon();},{passive:true});
+  m.addEventListener('mouseenter',pause);
+  m.addEventListener('mouseleave',function(){if(!isDown)resumeSoon();});
 })();
 </script>
 </body>
