@@ -88,10 +88,9 @@ section{position:relative}
 .showcase .sc-title{font-family:var(--font-display);font-weight:700;color:var(--primary);font-size:clamp(28px,7vw,46px);line-height:1;letter-spacing:-1.2px;margin-bottom:8px}
 .showcase .sc-title .soft{color:var(--text-soft)}
 .showcase .sc-intro{font-family:var(--font-display);font-weight:300;font-size:clamp(16px,4.5vw,21px);color:var(--text-soft);max-width:620px;margin:0 auto 34px;line-height:1.4}
-.marquee{position:relative;width:100%;overflow-x:auto;overflow-y:hidden;cursor:grab;touch-action:pan-x;-webkit-overflow-scrolling:touch;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
-.marquee::-webkit-scrollbar{display:none}
+.marquee{position:relative;width:100%;overflow:hidden;cursor:grab;touch-action:pan-y;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
 .marquee.grabbing{cursor:grabbing}
-.marquee-track{display:flex;gap:26px;width:max-content}
+.marquee-track{display:flex;gap:26px;width:max-content;will-change:transform}
 .marquee-track img{width:230px;height:auto;flex-shrink:0;border-radius:14px;border:5px solid #fff;background:#fff;box-shadow:0 20px 44px rgba(62,7,114,.24);user-select:none;-webkit-user-drag:none;pointer-events:none}
 @media(max-width:767px){.marquee-track img{width:170px}.marquee-track{gap:18px}}
 
@@ -572,42 +571,44 @@ window.addEventListener('scroll',function(){
   tick();setInterval(tick,1000);
 })();
 
-// Carrossel "Veja por dentro": auto-scroll + arraste (mouse e dedo)
+// Carrossel "Veja por dentro": auto via transform (suave no mobile) + arraste (mouse e dedo)
 (function(){
   var m=document.querySelector('.marquee');
   var track=m&&m.querySelector('.marquee-track');
   if(!m||!track)return;
-  var paused=false, resumeT, isDown=false, startX=0, startScroll=0;
-  function pause(){paused=true;clearTimeout(resumeT);}
-  function resumeSoon(){clearTimeout(resumeT);resumeT=setTimeout(function(){paused=false;},1500);}
+  var pos=0, half=0, paused=false, resumeT, dragging=false, startX=0, startPos=0;
+  function measure(){ half=track.scrollWidth/2; }
+  measure();
+  window.addEventListener('load',measure);
+  window.addEventListener('resize',measure);
+  function pauseNow(){paused=true;clearTimeout(resumeT);}
+  function resumeSoon(){clearTimeout(resumeT);resumeT=setTimeout(function(){paused=false;},1200);}
   function step(){
-    var half=track.scrollWidth/2;
-    if(!paused&&!isDown){m.scrollLeft+=0.6;}
+    if(!paused&&!dragging){ pos-=0.6; }
     if(half>0){
-      if(m.scrollLeft>=half)m.scrollLeft-=half;
-      else if(m.scrollLeft<=0)m.scrollLeft+=half;
+      if(pos<=-half) pos+=half;
+      else if(pos>0) pos-=half;
     }
+    track.style.transform='translateX('+pos+'px)';
     requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
-  // arraste com mouse (pointer do tipo mouse); no touch o scroll nativo já funciona
-  m.addEventListener('pointerdown',function(e){
-    if(e.pointerType!=='mouse')return;
-    isDown=true;m.classList.add('grabbing');startX=e.clientX;startScroll=m.scrollLeft;pause();
-    try{m.setPointerCapture(e.pointerId);}catch(_){}
-  });
-  m.addEventListener('pointermove',function(e){
-    if(!isDown)return;e.preventDefault();m.scrollLeft=startScroll-(e.clientX-startX);
-  });
-  function up(){if(!isDown)return;isDown=false;m.classList.remove('grabbing');resumeSoon();}
-  m.addEventListener('pointerup',up);
-  m.addEventListener('pointercancel',up);
-  // dedo / wheel: pausa o automático durante o uso
-  m.addEventListener('touchstart',pause,{passive:true});
-  m.addEventListener('touchend',resumeSoon,{passive:true});
-  m.addEventListener('wheel',function(){pause();resumeSoon();},{passive:true});
-  m.addEventListener('mouseenter',pause);
-  m.addEventListener('mouseleave',function(){if(!isDown)resumeSoon();});
+  function getX(e){ return e.touches&&e.touches[0]?e.touches[0].clientX:e.clientX; }
+  function down(e){ dragging=true; m.classList.add('grabbing'); startX=getX(e); startPos=pos; pauseNow(); }
+  function moveH(e){ if(!dragging)return; pos=startPos+(getX(e)-startX); }
+  function up(){ if(!dragging)return; dragging=false; m.classList.remove('grabbing'); resumeSoon(); }
+  // mouse
+  m.addEventListener('mousedown',function(e){e.preventDefault();down(e);});
+  window.addEventListener('mousemove',moveH);
+  window.addEventListener('mouseup',up);
+  // dedo
+  m.addEventListener('touchstart',down,{passive:true});
+  m.addEventListener('touchmove',moveH,{passive:true});
+  m.addEventListener('touchend',up);
+  m.addEventListener('touchcancel',up);
+  // hover desktop
+  m.addEventListener('mouseenter',pauseNow);
+  m.addEventListener('mouseleave',function(){if(!dragging)resumeSoon();});
 })();
 </script>
 </body>
